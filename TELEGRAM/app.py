@@ -1,65 +1,25 @@
-import requests   # 브라우저에다 요청을 했다면 이거는 리퀘스트로 요청해야함
+from flask import Flask, request
 import random
+import requests
+from utils import send_message
 
-tocken = '5929925771:AAFUNOFPm6SjNphVGpy0JkDC1ZT9606BHC4'  # 봇 아이디
-me = 5815766823
-output_message = 'dddddddddddd'
+app = Flask('hi')
 
-# 우리 챗봇이 받은 메세지를 확인 하려면?----> requests.get() 을 해야된다
+@app.route('/', methods=['POST'])                     # route 란 길을 뚫어주는 역할을 하는것
+def home():
+    # 서버로서 우리가 받은 요청  -->  server
+    data = request.json  # 요청을 받는것
+    input_message = data['message']['text']
+    sender_id = data['message']['from']['id']
 
+    if input_message == '안녕':
+        send_message('안녕하세요', sender_id)
+    elif input_message == '로또':
+        lotto = random.sample(range(1,46), 6)
+        send_message(lotto, sender_id)
 
-
-
-update_url = f'https://api.telegram.org/bot{tocken}/getUpdates'
-response = requests.get(update_url).json()  # 변수에 저장해야함 안그러면 의미가 없어짐
-input_message = response['result'][-1]['message']['text']
-chat_id = response['result'][-1]['message']['from']['id']             # 보낸 사람의 최신 메세지의 발신자 id 출력
-if input_message == '로또':
-    output_message = random.sample(range(1,40), 6)
-# hi라고 들어오면
-# output_message = 'hello'
-# 서버에 요청(url)을 보낸다
-elif input_message == '안녕':
-    output_message = '안녕하세요'
-
-else:
-    output_message = '처리할 수 없습니다'
+    return 'Hello Server'
+if __name__ == '__main__':
+    app.run(port=80, debug=True)
 
 
-
-
-
-
-# 최신 메세지 기준으로,
-
-
-send_url = f'https://api.telegram.org/bot{tocken}/sendMessage?chat_id={chat_id}&text={output_message}' # 
-requests.get(send_url)
-
-# hi 라고 들어오면 'hello' 로 답을 하고
-# 안녕이라고 들어오면 '안녕하세요'로 답을 한다
-    
-
-
-
-
-
-# url = f'https://api.telegram.org/bot{tocken}/sendMessage?chat_id={me}&text={message}' #  requesets 모듈에 이 url을 보낼것임
-
-# requests.get(url)
-
-
-
-
-
-'''
-https://api.telegram.org/bot5929925771:AAFUNOFPm6SjNphVGpy0JkDC1ZT9606BHC4/getMe
-
-https://api.telegram.org/bot5929925771:AAFUNOFPm6SjNphVGpy0JkDC1ZT9606BHC4/getUpdates
-https://api.telegram.org/bot5929925771:AAFUNOFPm6SjNphVGpy0JkDC1ZT9606BHC4/sendMessage?chat_id=5815766823&text=hi
-
-
-
-
-
-'''
