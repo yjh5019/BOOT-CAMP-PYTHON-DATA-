@@ -9,23 +9,21 @@ output_message = 'dddddddddddd'
 
 
 
-while True:
-    from time import sleep
-    sleep(5)
-    update_url = f'https://api.telegram.org/bot{tocken}/getUpdates'
-    response = requests.get(update_url).json()  # 변수에 저장해야함 안그러면 의미가 없어짐
-    input_message = response['result'][-1]['message']['text']
-    chat_id = response['result'][-1]['message']['from']['id']             # 보낸 사람의 최신 메세지의 발신자 id 출력
-    if input_message == '로또':
-        output_message = random.sample(range(1,40), 6)
-    # hi라고 들어오면
-    # output_message = 'hello'
-    # 서버에 요청(url)을 보낸다
-    elif input_message == '안녕':
-        output_message = '안녕하세요'
 
-    else:
-        output_message = '처리할 수 없습니다'
+update_url = f'https://api.telegram.org/bot{tocken}/getUpdates'
+response = requests.get(update_url).json()  # 변수에 저장해야함 안그러면 의미가 없어짐
+input_message = response['result'][-1]['message']['text']
+chat_id = response['result'][-1]['message']['from']['id']             # 보낸 사람의 최신 메세지의 발신자 id 출력
+if input_message == '로또':
+    output_message = random.sample(range(1,40), 6)
+# hi라고 들어오면
+# output_message = 'hello'
+# 서버에 요청(url)을 보낸다
+elif input_message == '안녕':
+    output_message = '안녕하세요'
+
+else:
+    output_message = '처리할 수 없습니다'
 
 
 
